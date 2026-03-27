@@ -43,10 +43,9 @@ export function PlayerBar({ audioRef }: Props) {
 		const onDurationChange = () => setDuration(audio.duration || 0)
 		const onEnded = () => {
 			const idx = tracks.findIndex((t) => t.key === currentTrack?.key)
-			if (idx >= 0 && idx < tracks.length - 1) {
-				dispatch({ type: 'LOAD_TRACK', payload: tracks[idx + 1] })
-			} else {
-				dispatch({ type: 'STOP' })
+			if (idx >= 0) {
+				const next = idx < tracks.length - 1 ? tracks[idx + 1] : tracks[0]
+				dispatch({ type: 'LOAD_TRACK', payload: next })
 			}
 		}
 
@@ -94,8 +93,9 @@ export function PlayerBar({ audioRef }: Props) {
 
 	function skipForward() {
 		const idx = tracks.findIndex((t) => t.key === currentTrack?.key)
-		if (idx >= 0 && idx < tracks.length - 1) {
-			dispatch({ type: 'LOAD_TRACK', payload: tracks[idx + 1] })
+		if (idx >= 0) {
+			const next = idx < tracks.length - 1 ? tracks[idx + 1] : tracks[0]
+			dispatch({ type: 'LOAD_TRACK', payload: next })
 		}
 	}
 
