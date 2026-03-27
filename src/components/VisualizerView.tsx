@@ -33,15 +33,23 @@ export function VisualizerView({ onClose, expanded }: Props) {
     renderer.setPixelRatio(window.devicePixelRatio)
     container.appendChild(renderer.domElement)
 
-    // Triangle geometry
-    const geometry = new THREE.BufferGeometry()
-    const vertices = new Float32Array([
-       0,  1.2,  0,  // top
-      -1, -0.8,  0,  // bottom left
-       1, -0.8,  0,  // bottom right
-    ])
-    geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
-    const material = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, side: THREE.DoubleSide, wireframe: false })
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.4)
+    scene.add(ambient)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2)
+    keyLight.position.set(3, 4, 5)
+    scene.add(keyLight)
+    const fillLight = new THREE.DirectionalLight(0xa78bfa, 0.6)
+    fillLight.position.set(-3, -2, -3)
+    scene.add(fillLight)
+
+    // Tetrahedron (4 triangular faces — natural 3D triangle)
+    const geometry = new THREE.TetrahedronGeometry(1.4)
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x8b5cf6,
+      roughness: 0.3,
+      metalness: 0.5,
+    })
     const triangle = new THREE.Mesh(geometry, material)
     scene.add(triangle)
 
@@ -57,8 +65,9 @@ export function VisualizerView({ onClose, expanded }: Props) {
 
     // Animation loop
     function tick() {
-      triangle.rotation.y += 0.01
-      triangle.rotation.x += 0.003
+      triangle.rotation.y += 0.008
+      triangle.rotation.x += 0.004
+      triangle.rotation.z += 0.002
       renderer.render(scene, camera)
       rafRef.current = requestAnimationFrame(tick)
     }
