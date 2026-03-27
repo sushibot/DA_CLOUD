@@ -14,8 +14,10 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
 	const [muted, setMuted] = useState(false)
+	const [volumeOpen, setVolumeOpen] = useState(false)
 	const preMuteVolume = useRef(volume)
 	const seekingRef = useRef(false)
+	const volumeRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -28,6 +30,17 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 		window.addEventListener('keydown', onKeyDown)
 		return () => window.removeEventListener('keydown', onKeyDown)
 	}, [status]) // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		if (!volumeOpen) return
+		function onClickOutside(e: MouseEvent) {
+			if (volumeRef.current && !volumeRef.current.contains(e.target as Node)) {
+				setVolumeOpen(false)
+			}
+		}
+		document.addEventListener('mousedown', onClickOutside)
+		return () => document.removeEventListener('mousedown', onClickOutside)
+	}, [volumeOpen])
 
 	useEffect(() => {
 		if (!currentTrack) return
@@ -207,20 +220,33 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 				</div>
 
 				{/* Volume */}
-				<div className="flex items-center gap-2 text-gray-400 text-sm">
-					<button onClick={toggleMute} className="cursor-pointer hover:text-white" title={muted ? 'Unmute' : 'Mute'}>
-						{muted ? <CiVolumeMute size={22} /> : <CiVolume size={22} />}
+				<div ref={volumeRef} className="relative flex items-center text-gray-400">
+					<button
+						onClick={() => setVolumeOpen(v => !v)}
+						className="cursor-pointer hover:text-white"
+						title="Volume"
+					>
+						{muted ? <CiVolumeMute size={22} /> : volume === 0 ? <CiVolume size={22} /> : <CiVolumeHigh size={22} />}
 					</button>
-					<input
-						type="range"
-						min={0}
-						max={1}
-						step={0.01}
-						value={volume}
-						onChange={handleVolumeChange}
-						className="w-24 accent-violet-500 cursor-pointer"
-					/>
-					<CiVolumeHigh size={22} />
+
+					{volumeOpen && (
+						<div className="absolute bottom-full right-0 mb-3 flex flex-col items-center gap-2 bg-gray-800 border border-white/10 rounded-xl px-3 py-4 shadow-xl">
+							<CiVolumeHigh size={18} className="text-gray-400" />
+							<input
+								type="range"
+								min={0}
+								max={1}
+								step={0.01}
+								value={volume}
+								onChange={handleVolumeChange}
+								className="accent-violet-500 cursor-pointer"
+								style={{ writingMode: 'vertical-lr', direction: 'rtl', height: '96px' }}
+							/>
+							<button onClick={toggleMute} className="cursor-pointer hover:text-white" title={muted ? 'Unmute' : 'Mute'}>
+								{muted ? <CiVolumeMute size={18} /> : <CiVolume size={18} />}
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
