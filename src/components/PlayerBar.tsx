@@ -209,7 +209,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 					<button
 						onClick={skipForward}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-5xl sm:text-3xl"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
 						title="Skip forward"
 					><CiCircleChevRight /></button>
 				</div>
