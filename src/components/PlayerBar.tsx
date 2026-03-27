@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { CiCircleChevLeft, CiCircleChevRight, CiPause1, CiPlay1, CiStop1, CiVolume, CiVolumeHigh } from 'react-icons/ci'
+import { CiCircleChevLeft, CiCircleChevRight, CiPause1, CiPlay1, CiStop1, CiVolume, CiVolumeHigh, CiVolumeMute } from 'react-icons/ci'
 import { usePlayer } from '../context/PlayerContext'
 
 interface Props {
@@ -11,6 +11,7 @@ export function PlayerBar({ audioRef }: Props) {
 	const { status, currentTrack, tracks, volume } = state
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
+	const [muted, setMuted] = useState(false)
 	const seekingRef = useRef(false)
 
 	useEffect(() => {
@@ -64,8 +65,6 @@ export function PlayerBar({ audioRef }: Props) {
 		}
 	}
 
-
-
 	function stop() {
 		const audio = audioRef.current
 		if (!audio) return
@@ -101,6 +100,14 @@ export function PlayerBar({ audioRef }: Props) {
 		seekingRef.current = false
 		const audio = audioRef.current
 		if (audio) audio.currentTime = Number(e.target.value)
+	}
+
+	function toggleMute() {
+		const audio = audioRef.current
+		if (!audio) return
+		const next = !muted
+		audio.muted = next
+		setMuted(next)
 	}
 
 	function handleVolumeChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -150,34 +157,36 @@ export function PlayerBar({ audioRef }: Props) {
 					<button
 						onClick={skipBack}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 text-xl cursor-pointer"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
 						title="Skip back"
-					>⏮</button>
+					><CiCircleChevLeft size={28} /></button>
 					<button
 						onClick={togglePlayPause}
 						disabled={!isActive || status === 'loading'}
-						className="w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 flex items-center justify-center text-white text-xl cursor-pointer"
+						className="w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 flex items-center justify-center text-white cursor-pointer"
 						title={status === 'playing' ? 'Pause' : 'Play'}
 					>
-						{status === 'playing' ? '⏸' : '▶'}
+						{status === 'playing' ? <CiPause1 size={22} /> : <CiPlay1 size={22} />}
 					</button>
 					<button
 						onClick={stop}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 text-xl cursor-pointer"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
 						title="Stop"
-					>⏹</button>
+					><CiStop1 size={28} /></button>
 					<button
 						onClick={skipForward}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 text-xl cursor-pointer"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
 						title="Skip forward"
-					>⏭</button>
+					><CiCircleChevRight size={28} /></button>
 				</div>
 
 				{/* Volume */}
 				<div className="flex items-center gap-2 text-gray-400 text-sm">
-					<span>🔉</span>
+					<button onClick={toggleMute} className="cursor-pointer hover:text-white" title={muted ? 'Unmute' : 'Mute'}>
+						{muted ? <CiVolumeMute size={22} /> : <CiVolume size={22} />}
+					</button>
 					<input
 						type="range"
 						min={0}
@@ -187,7 +196,7 @@ export function PlayerBar({ audioRef }: Props) {
 						onChange={handleVolumeChange}
 						className="w-24 accent-violet-500"
 					/>
-					<span>🔊</span>
+					<CiVolumeHigh size={22} />
 				</div>
 			</div>
 		</div>
