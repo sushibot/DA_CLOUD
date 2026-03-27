@@ -28,7 +28,8 @@ export function VisualizerView({ onClose, expanded }: Props) {
     camera.position.z = 3
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.setClearColor(0x111827)
     renderer.setSize(w, h)
     renderer.setPixelRatio(window.devicePixelRatio)
     container.appendChild(renderer.domElement)
@@ -84,7 +85,7 @@ export function VisualizerView({ onClose, expanded }: Props) {
   }, [expanded])
 
   return (
-    <div className="h-full w-full bg-gray-950 flex flex-col">
+    <div className={`h-full w-full bg-gray-900 flex flex-col transition-opacity duration-700 ease-in-out ${expanded ? 'opacity-100' : 'opacity-0'}`}>
       <div className="shrink-0 flex items-center justify-between px-6 pt-4">
         <p className="text-gray-500 text-sm uppercase tracking-widest">Now Playing</p>
         <button

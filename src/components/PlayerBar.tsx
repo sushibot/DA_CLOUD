@@ -157,7 +157,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 	const isActive = !!currentTrack
 
 	return (
-		<div className="border-t border-white/10 bg-gray-900 px-4 py-3 flex flex-col gap-2">
+		<div className={`bg-gray-900 px-4 py-3 flex flex-col gap-2 ${expanded ? '' : 'border-t border-white/10'}`}>
 			{/* Track name */}
 			<div
 				onClick={isActive ? onExpandToggle : undefined}
@@ -215,7 +215,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 				</div>
 
 				{/* Volume */}
-				<div ref={volumeRef} className="absolute right-0 flex items-center text-gray-400">
+				<div ref={volumeRef} className="absolute right-0 hidden sm:flex items-center text-gray-400">
 					<button
 						onClick={() => setVolumeOpen(v => !v)}
 						className="cursor-pointer hover:text-white text-3xl sm:text-xl"
