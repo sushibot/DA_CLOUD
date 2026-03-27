@@ -189,7 +189,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 			</div>
 
 			{/* Controls + volume */}
-			<div className="flex items-center justify-between">
+			<div className="relative flex items-center justify-center w-full">
 				<div className="flex items-center gap-3">
 					<button
 						onClick={skipBack}
@@ -206,12 +206,6 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 						{status === 'playing' ? <CiPause1 size={22} /> : <CiPlay1 size={22} />}
 					</button>
 					<button
-						onClick={stop}
-						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
-						title="Stop"
-					><CiStop1 size={28} /></button>
-					<button
 						onClick={skipForward}
 						disabled={!isActive}
 						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
@@ -220,7 +214,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 				</div>
 
 				{/* Volume */}
-				<div ref={volumeRef} className="relative flex items-center text-gray-400">
+				<div ref={volumeRef} className="absolute right-0 flex items-center text-gray-400">
 					<button
 						onClick={() => setVolumeOpen(v => !v)}
 						className="cursor-pointer hover:text-white"
