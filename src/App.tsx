@@ -15,6 +15,13 @@ export default function App() {
 
   useEffect(() => {
     const audio = audioRef.current
+    if (!audio) return
+    if (state.status === 'playing') audio.play().catch(console.error)
+    else if (state.status === 'paused') audio.pause()
+  }, [state.status])
+
+  useEffect(() => {
+    const audio = audioRef.current
     if (!audio || !state.currentTrack) return
 
     async function load() {
