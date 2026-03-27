@@ -1,11 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePlayer } from './context/PlayerContext'
 import { TrackList } from './components/TrackList'
 import { PlayerBar } from './components/PlayerBar'
+import { VisualizerView } from './components/VisualizerView'
 
 export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const { state, dispatch } = usePlayer()
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     const audio = new Audio()
@@ -42,9 +44,17 @@ export default function App() {
         <h1 className="text-xl font-semibold tracking-tight">Sushi Cloud</h1>
       </header>
 
-      <TrackList />
+      <div className="flex-1 relative overflow-hidden">
+        <TrackList />
 
-      <PlayerBar audioRef={audioRef} />
+        <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+          expanded ? 'translate-y-0' : 'translate-y-full'
+        }`}>
+          <VisualizerView onClose={() => setExpanded(false)} />
+        </div>
+      </div>
+
+      <PlayerBar audioRef={audioRef} expanded={expanded} onExpandToggle={() => setExpanded(v => !v)} />
     </div>
   )
 }

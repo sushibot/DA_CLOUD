@@ -4,9 +4,11 @@ import { usePlayer } from '../context/PlayerContext'
 
 interface Props {
 	audioRef: React.RefObject<HTMLAudioElement | null>
+	expanded: boolean
+	onExpandToggle: () => void
 }
 
-export function PlayerBar({ audioRef }: Props) {
+export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 	const { state, dispatch } = usePlayer()
 	const { status, currentTrack, tracks, volume } = state
 	const [currentTime, setCurrentTime] = useState(0)
@@ -144,8 +146,14 @@ export function PlayerBar({ audioRef }: Props) {
 	return (
 		<div className="border-t border-white/10 bg-gray-900 px-4 py-3 flex flex-col gap-2">
 			{/* Track name */}
-			<div className="text-center text-sm text-gray-300 truncate">
+			<div
+				onClick={isActive ? onExpandToggle : undefined}
+				className={`text-center text-sm text-gray-300 truncate ${isActive ? 'cursor-pointer hover:text-white' : ''}`}
+			>
 				{currentTrack?.title ?? 'No track loaded'}
+				{isActive && (
+					<span className="ml-2 text-gray-500 text-xs">{expanded ? '▾' : '▴'}</span>
+				)}
 			</div>
 
 			{/* Seek bar */}
