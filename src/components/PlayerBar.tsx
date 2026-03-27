@@ -88,7 +88,8 @@ export function PlayerBar({ audioRef }: Props) {
 			return
 		}
 		const idx = tracks.findIndex((t) => t.key === currentTrack?.key)
-		if (idx > 0) dispatch({ type: 'LOAD_TRACK', payload: tracks[idx - 1] })
+		const prev = idx > 0 ? tracks[idx - 1] : tracks[tracks.length - 1]
+		if (prev) dispatch({ type: 'LOAD_TRACK', payload: prev })
 	}
 
 	function skipForward() {
