@@ -31,7 +31,8 @@ export default function App() {
       const { url } = await res.json()
       audio!.src = url
       audio!.volume = state.volume
-      await audio!.play()
+
+await audio!.play()
       dispatch({ type: 'PLAY' })
     }
 

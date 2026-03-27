@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { listAudioKeys, getPresignedUrl } from '../s3.js'
+import { listAudioKeys, getPresignedUrl, getTrackMetadata } from '../s3.js'
 import type { Track } from '../../src/types.js'
 
 const router = Router()
@@ -14,7 +14,12 @@ function keyToTitle(key: string): string {
 router.get('/', async (_req, res) => {
   try {
     const keys = await listAudioKeys()
-    const tracks: Track[] = keys.map((key) => ({ key, title: keyToTitle(key) }))
+    const tracks: Track[] = await Promise.all(
+      keys.map(async (key) => {
+        const meta = await getTrackMetadata(key)
+        return { key, title: keyToTitle(key), ...meta }
+      })
+    )
     res.json(tracks)
   } catch (err) {
     console.error('Error listing tracks:', err)
