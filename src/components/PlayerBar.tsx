@@ -12,6 +12,7 @@ export function PlayerBar({ audioRef }: Props) {
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
 	const [muted, setMuted] = useState(false)
+	const preMuteVolume = useRef(volume)
 	const seekingRef = useRef(false)
 
 	useEffect(() => {
@@ -105,9 +106,17 @@ export function PlayerBar({ audioRef }: Props) {
 	function toggleMute() {
 		const audio = audioRef.current
 		if (!audio) return
-		const next = !muted
-		audio.muted = next
-		setMuted(next)
+		if (!muted) {
+			preMuteVolume.current = volume
+			audio.muted = true
+			dispatch({ type: 'SET_VOLUME', payload: 0 })
+			audio.volume = 0
+		} else {
+			audio.muted = false
+			dispatch({ type: 'SET_VOLUME', payload: preMuteVolume.current })
+			audio.volume = preMuteVolume.current
+		}
+		setMuted(!muted)
 	}
 
 	function handleVolumeChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -194,7 +203,7 @@ export function PlayerBar({ audioRef }: Props) {
 						step={0.01}
 						value={volume}
 						onChange={handleVolumeChange}
-						className="w-24 accent-violet-500"
+						className="w-24 accent-violet-500 cursor-pointer"
 					/>
 					<CiVolumeHigh size={22} />
 				</div>
