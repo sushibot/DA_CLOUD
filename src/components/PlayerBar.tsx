@@ -161,7 +161,8 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 			{/* Track name */}
 			<div
 				onClick={isActive ? onExpandToggle : undefined}
-				className={`text-center text-sm text-gray-300 truncate ${isActive ? 'cursor-pointer hover:text-white' : ''}`}
+				className={`text-center text-xl text-gray-300 truncate sm:text-sm ${isActive ? 'cursor-pointer hover:text-white' : ''}`}
+
 			>
 				{currentTrack?.title ?? 'No track loaded'}
 				{isActive && (
@@ -194,33 +195,33 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 					<button
 						onClick={skipBack}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
 						title="Skip back"
-					><CiCircleChevLeft size={28} /></button>
+					><CiCircleChevLeft /></button>
 					<button
 						onClick={togglePlayPause}
 						disabled={!isActive || status === 'loading'}
-						className="w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 flex items-center justify-center text-white cursor-pointer"
+						className="w-14 h-14 sm:w-10 sm:h-10 rounded-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 flex items-center justify-center text-white cursor-pointer text-3xl sm:text-xl"
 						title={status === 'playing' ? 'Pause' : 'Play'}
 					>
-						{status === 'playing' ? <CiPause1 size={22} /> : <CiPlay1 size={22} />}
+						{status === 'playing' ? <CiPause1 /> : <CiPlay1 />}
 					</button>
 					<button
 						onClick={skipForward}
 						disabled={!isActive}
-						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer"
+						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-5xl sm:text-3xl"
 						title="Skip forward"
-					><CiCircleChevRight size={28} /></button>
+					><CiCircleChevRight /></button>
 				</div>
 
 				{/* Volume */}
 				<div ref={volumeRef} className="absolute right-0 flex items-center text-gray-400">
 					<button
 						onClick={() => setVolumeOpen(v => !v)}
-						className="cursor-pointer hover:text-white"
+						className="cursor-pointer hover:text-white text-3xl sm:text-xl"
 						title="Volume"
 					>
-						{muted ? <CiVolumeMute size={22} /> : volume === 0 ? <CiVolume size={22} /> : <CiVolumeHigh size={22} />}
+						{muted ? <CiVolumeMute /> : volume === 0 ? <CiVolume /> : <CiVolumeHigh />}
 					</button>
 
 					{volumeOpen && (
