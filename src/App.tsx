@@ -39,12 +39,12 @@ export default function App() {
   }, [state.currentTrack]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="h-screen flex flex-col bg-gray-950 text-white">
-      <header className="px-6 py-4 border-b border-white/10">
+    <div className="h-dvh flex flex-col bg-gray-950 text-white">
+      <header className="shrink-0 px-6 py-4 border-b border-white/10">
         <h1 className="text-xl font-semibold tracking-tight">Sushi Cloud</h1>
       </header>
 
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 min-h-0 relative overflow-hidden">
         <TrackList />
 
         <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
