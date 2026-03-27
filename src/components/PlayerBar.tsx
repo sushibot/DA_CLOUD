@@ -28,6 +28,12 @@ export function PlayerBar({ audioRef }: Props) {
 	}, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		if (!currentTrack) return
+		const el = document.getElementById(`track-${CSS.escape(currentTrack.key)}`)
+		el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+	}, [currentTrack])
+
+	useEffect(() => {
 		const audio = audioRef.current
 		if (!audio) return
 

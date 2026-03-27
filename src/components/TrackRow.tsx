@@ -11,6 +11,7 @@ export function TrackRow({ track, isActive }: Props) {
 
   return (
     <li
+      id={`track-${CSS.escape(track.key)}`}
       onClick={() => dispatch({ type: 'LOAD_TRACK', payload: track })}
       className={`px-4 py-3 cursor-pointer rounded-lg transition-colors ${
         isActive
