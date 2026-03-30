@@ -1,26 +1,20 @@
 import { Router } from 'express'
-import { listAudioKeys, getPresignedUrl, getTrackMetadata } from '../s3.js'
-import type { Track } from '../../src/types.js'
+import { getPresignedUrl } from '../s3.js'
+import { db } from '../db/index.js'
+import { tracks } from '../db/schema.js'
+import { eq } from 'drizzle-orm'
 
 const router = Router()
 
-function keyToTitle(key: string): string {
-  return key
-    .split('/').pop()!
-    .replace(/\.[^.]+$/, '')
-    .replace(/[-_]/g, ' ')
-}
-
 router.get('/', async (_req, res) => {
   try {
-    const keys = await listAudioKeys()
-    const tracks: Track[] = await Promise.all(
-      keys.map(async (key) => {
-        const meta = await getTrackMetadata(key)
-        return { key, title: keyToTitle(key), ...meta }
-      })
-    )
-    res.json(tracks)
+    const rows = await db.select().from(tracks).where(eq(tracks.isPublished, true))
+    const result = rows.map(row => ({
+      key: row.s3Key,
+      title: row.title,
+      bpm: row.bpm ?? undefined,
+    }))
+    res.json(result)
   } catch (err) {
     console.error('Error listing tracks:', err)
     res.status(500).json({ error: 'Failed to list tracks' })
