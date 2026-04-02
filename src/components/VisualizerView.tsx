@@ -1,104 +1,17 @@
-import { useRef, useEffect } from 'react'
 import type React from 'react'
 import { CiCircleChevDown } from 'react-icons/ci'
-import * as THREE from 'three'
 import { usePlayer } from '../context/PlayerContext'
+import { VectorScope } from './VectorScope'
 
 interface Props {
   onClose: () => void
   expanded: boolean
-  analyserRef: React.RefObject<AnalyserNode | null>
+  analyserLeftRef: React.RefObject<AnalyserNode | null>
+  analyserRightRef: React.RefObject<AnalyserNode | null>
 }
 
-export function VisualizerView({ onClose, expanded, analyserRef }: Props) {
+export function VisualizerView({ onClose, expanded, analyserLeftRef, analyserRightRef }: Props) {
   const { state } = usePlayer()
-  const canvasRef = useRef<HTMLDivElement>(null)
-  const rafRef = useRef<number>(0)
-
-  useEffect(() => {
-    if (!expanded || !canvasRef.current) return
-
-    const container = canvasRef.current
-    const w = container.clientWidth
-    const h = container.clientHeight
-
-    // Scene
-    const scene = new THREE.Scene()
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100)
-    camera.position.z = 3
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.setClearColor(0x111827)
-    renderer.setSize(w, h)
-    renderer.setPixelRatio(window.devicePixelRatio)
-    container.appendChild(renderer.domElement)
-
-    // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.4)
-    scene.add(ambient)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2)
-    keyLight.position.set(3, 4, 5)
-    scene.add(keyLight)
-    const fillLight = new THREE.DirectionalLight(0xa78bfa, 0.6)
-    fillLight.position.set(-3, -2, -3)
-    scene.add(fillLight)
-
-    // Tetrahedron (4 triangular faces — natural 3D triangle)
-    const geometry = new THREE.TetrahedronGeometry(1.4)
-    const material = new THREE.MeshStandardMaterial({
-      color: 0x8b5cf6,
-      roughness: 0.3,
-      metalness: 0.5,
-    })
-    const triangle = new THREE.Mesh(geometry, material)
-    scene.add(triangle)
-
-    // Resize handler
-    function onResize() {
-      const w = container.clientWidth
-      const h = container.clientHeight
-      camera.aspect = w / h
-      camera.updateProjectionMatrix()
-      renderer.setSize(w, h)
-    }
-    window.addEventListener('resize', onResize)
-
-    // Animation loop
-    const dataArray = new Uint8Array(analyserRef.current?.frequencyBinCount ?? 128)
-
-    function tick() {
-      let intensity = 0
-      if (analyserRef.current) {
-        analyserRef.current.getByteFrequencyData(dataArray)
-        const avg = dataArray.reduce((sum, v) => sum + v, 0) / dataArray.length
-        intensity = avg / 255 // 0–1
-      }
-
-      const speed = 0.002 + intensity * 0.04
-      triangle.rotation.y += speed * 4
-      triangle.rotation.x += speed * 2
-      triangle.rotation.z += speed
-
-      const scale = 1 + intensity * 0.4
-      triangle.scale.setScalar(scale)
-
-      renderer.render(scene, camera)
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-
-    return () => {
-      cancelAnimationFrame(rafRef.current)
-      window.removeEventListener('resize', onResize)
-      renderer.dispose()
-      geometry.dispose()
-      material.dispose()
-      container.removeChild(renderer.domElement)
-    }
-  }, [expanded])
 
   return (
     <div className={`h-full w-full bg-gray-900 flex flex-col transition-opacity duration-700 ease-in-out ${expanded ? 'opacity-100' : 'opacity-0'}`}>
@@ -117,7 +30,9 @@ export function VisualizerView({ onClose, expanded, analyserRef }: Props) {
         {state.currentTrack?.title ?? '—'}
       </p>
 
-      <div ref={canvasRef} className="flex-1 min-h-0" />
+      <div className="flex-1 min-h-0">
+        <VectorScope analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} expanded={expanded} />
+      </div>
     </div>
   )
 }

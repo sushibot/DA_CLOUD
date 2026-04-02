@@ -8,7 +8,8 @@ export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
-  const analyserRef = useRef<AnalyserNode | null>(null)
+  const analyserLeftRef = useRef<AnalyserNode | null>(null)
+  const analyserRightRef = useRef<AnalyserNode | null>(null)
   const { state, dispatch } = usePlayer()
   const [expanded, setExpanded] = useState(false)
 
@@ -40,13 +41,19 @@ export default function App() {
         const ctx = new AudioContext()
         await ctx.resume()
         const source = ctx.createMediaElementSource(audio!)
-        const analyser = ctx.createAnalyser()
-        analyser.fftSize = 256
-        source.connect(analyser)
-        analyser.connect(ctx.destination)
+        const splitter = ctx.createChannelSplitter(2)
+        const analyserL = ctx.createAnalyser()
+        const analyserR = ctx.createAnalyser()
+        analyserL.fftSize = 2048
+        analyserR.fftSize = 2048
+        source.connect(splitter)
+        splitter.connect(analyserL, 0)
+        splitter.connect(analyserR, 1)
+        source.connect(ctx.destination)
         audioContextRef.current = ctx
         sourceRef.current = source
-        analyserRef.current = analyser
+        analyserLeftRef.current = analyserL
+        analyserRightRef.current = analyserR
       } else if (audioContextRef.current?.state === 'suspended') {
         await audioContextRef.current.resume()
       }
@@ -70,7 +77,7 @@ export default function App() {
         <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
           expanded ? 'translate-y-0' : 'translate-y-full'
         }`}>
-          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserRef={analyserRef} />
+          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} />
         </div>
       </div>
 
