@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import type React from 'react'
 import { CiCircleChevDown } from 'react-icons/ci'
 import * as THREE from 'three'
 import { usePlayer } from '../context/PlayerContext'
@@ -6,9 +7,10 @@ import { usePlayer } from '../context/PlayerContext'
 interface Props {
   onClose: () => void
   expanded: boolean
+  analyserRef: React.RefObject<AnalyserNode | null>
 }
 
-export function VisualizerView({ onClose, expanded }: Props) {
+export function VisualizerView({ onClose, expanded, analyserRef }: Props) {
   const { state } = usePlayer()
   const canvasRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(0)
@@ -65,10 +67,24 @@ export function VisualizerView({ onClose, expanded }: Props) {
     window.addEventListener('resize', onResize)
 
     // Animation loop
+    const dataArray = new Uint8Array(analyserRef.current?.frequencyBinCount ?? 128)
+
     function tick() {
-      triangle.rotation.y += 0.008
-      triangle.rotation.x += 0.004
-      triangle.rotation.z += 0.002
+      let intensity = 0
+      if (analyserRef.current) {
+        analyserRef.current.getByteFrequencyData(dataArray)
+        const avg = dataArray.reduce((sum, v) => sum + v, 0) / dataArray.length
+        intensity = avg / 255 // 0–1
+      }
+
+      const speed = 0.002 + intensity * 0.04
+      triangle.rotation.y += speed * 4
+      triangle.rotation.x += speed * 2
+      triangle.rotation.z += speed
+
+      const scale = 1 + intensity * 0.4
+      triangle.scale.setScalar(scale)
+
       renderer.render(scene, camera)
       rafRef.current = requestAnimationFrame(tick)
     }

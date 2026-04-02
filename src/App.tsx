@@ -6,11 +6,15 @@ import { VisualizerView } from './components/VisualizerView'
 
 export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
   const { state, dispatch } = usePlayer()
   const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     const audio = new Audio()
+    audio.crossOrigin = 'anonymous'
     audioRef.current = audio
     return () => { audio.pause() }
   }, [])
@@ -32,7 +36,22 @@ export default function App() {
       audio!.src = url
       audio!.volume = state.volume
 
-await audio!.play()
+      if (!sourceRef.current) {
+        const ctx = new AudioContext()
+        await ctx.resume()
+        const source = ctx.createMediaElementSource(audio!)
+        const analyser = ctx.createAnalyser()
+        analyser.fftSize = 256
+        source.connect(analyser)
+        analyser.connect(ctx.destination)
+        audioContextRef.current = ctx
+        sourceRef.current = source
+        analyserRef.current = analyser
+      } else if (audioContextRef.current?.state === 'suspended') {
+        await audioContextRef.current.resume()
+      }
+
+      await audio!.play()
       dispatch({ type: 'PLAY' })
     }
 
@@ -51,7 +70,7 @@ await audio!.play()
         <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
           expanded ? 'translate-y-0' : 'translate-y-full'
         }`}>
-          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} />
+          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserRef={analyserRef} />
         </div>
       </div>
 
