@@ -157,7 +157,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 	const isActive = !!currentTrack
 
 	return (
-		<div className={`bg-gray-900 px-4 py-3 flex flex-col gap-2 ${expanded ? '' : 'border-t border-white/10'}`}>
+		<div className={`bg-gray-950 px-4 py-3 flex flex-col gap-2 ${expanded ? '' : 'border-t border-white/10'}`}>
 			{/* Track name */}
 			<div
 				onClick={isActive ? onExpandToggle : undefined}

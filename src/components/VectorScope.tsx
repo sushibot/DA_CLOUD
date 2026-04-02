@@ -6,7 +6,10 @@ interface Props {
   expanded: boolean
 }
 
-export function VectorScope({ analyserLeftRef, analyserRightRef, expanded }: Props) {
+const NUM_POINTS = 128
+const TWO_PI = Math.PI * 2
+
+export function VectorScope({ analyserLeftRef, expanded }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const rafRef = useRef<number>(0)
 
@@ -23,9 +26,7 @@ export function VectorScope({ analyserLeftRef, analyserRightRef, expanded }: Pro
     resize()
     window.addEventListener('resize', resize)
 
-    const bufferLength = analyserLeftRef.current?.frequencyBinCount ?? 1024
-    const dataL = new Float32Array(bufferLength)
-    const dataR = new Float32Array(bufferLength)
+    const dataArray = new Uint8Array(NUM_POINTS)
 
     function tick() {
       rafRef.current = requestAnimationFrame(tick)
@@ -34,28 +35,38 @@ export function VectorScope({ analyserLeftRef, analyserRightRef, expanded }: Pro
       const h = canvas.height
       const cx = w / 2
       const cy = h / 2
-      const radius = Math.min(cx, cy) * 0.85
+      const baseRadius = Math.min(cx, cy) * 0.15
+      const maxSpike = Math.min(cx, cy) * 0.75
 
-      // Fade previous frame instead of clearing — creates trails
-      ctx.fillStyle = 'rgba(17, 24, 39, 0.35)'
+      // Fade trail
+      ctx.fillStyle = 'rgba(3, 7, 18, 0.25)'
       ctx.fillRect(0, 0, w, h)
 
-      if (!analyserLeftRef.current || !analyserRightRef.current) return
+      if (!analyserLeftRef.current) return
+      analyserLeftRef.current.getByteFrequencyData(dataArray)
 
-      analyserLeftRef.current.getFloatTimeDomainData(dataL)
-      analyserRightRef.current.getFloatTimeDomainData(dataR)
+      for (let i = 0; i < NUM_POINTS; i++) {
+        const angle = (i / NUM_POINTS) * TWO_PI - Math.PI / 2
+        const amplitude = dataArray[i] / 255
+        const spikeLength = baseRadius + amplitude * maxSpike
 
-      for (let i = 0; i < bufferLength; i++) {
-        const x = cx + dataL[i] * radius
-        const y = cy - dataR[i] * radius
+        const cosA = Math.cos(angle)
+        const sinA = Math.sin(angle)
 
-        const intensity = Math.abs(dataL[i]) + Math.abs(dataR[i])
-        const alpha = Math.min(0.15 + intensity * 0.85, 1)
+        // Draw dots along the spike from base to tip
+        const dotCount = Math.max(2, Math.floor(amplitude * 18))
+        for (let d = 0; d < dotCount; d++) {
+          const t = baseRadius + (spikeLength - baseRadius) * (d / dotCount)
+          const x = cx + cosA * t
+          const y = cy + sinA * t
+          const alpha = 0.3 + (d / dotCount) * 0.7
+          const radius = 1 + (d / dotCount) * 1.2
 
-        ctx.beginPath()
-        ctx.arc(x, y, 1.2, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(139, 92, 246, ${alpha})`
-        ctx.fill()
+          ctx.beginPath()
+          ctx.arc(x, y, radius, 0, TWO_PI)
+          ctx.fillStyle = `rgba(139, 92, 246, ${alpha})`
+          ctx.fill()
+        }
       }
     }
 
@@ -65,12 +76,7 @@ export function VectorScope({ analyserLeftRef, analyserRightRef, expanded }: Pro
       cancelAnimationFrame(rafRef.current)
       window.removeEventListener('resize', resize)
     }
-  }, [expanded, analyserLeftRef, analyserRightRef])
+  }, [expanded, analyserLeftRef])
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="w-full h-full"
-    />
-  )
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 }
