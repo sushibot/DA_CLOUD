@@ -1,7 +1,7 @@
 import type React from 'react'
 import { CiCircleChevDown } from 'react-icons/ci'
 import { usePlayer } from '../context/PlayerContext'
-import { VectorScope } from './VectorScope'
+import { VectorScope3D } from './VectorScope3D'
 
 interface Props {
   onClose: () => void
@@ -16,7 +16,7 @@ export function VisualizerView({ onClose, expanded, analyserLeftRef, analyserRig
   return (
     <div className={`relative h-full w-full bg-gray-950 transition-opacity duration-700 ease-in-out ${expanded ? 'opacity-100' : 'opacity-0'}`}>
       {/* Canvas fills the entire container */}
-      <VectorScope analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} expanded={expanded} />
+      <VectorScope3D analyserLeftRef={analyserLeftRef} expanded={expanded} />
 
       {/* Header overlaid on top */}
       <div className="absolute inset-x-0 top-0 flex items-center justify-between px-6 pt-4">
