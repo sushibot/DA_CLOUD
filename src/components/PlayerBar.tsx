@@ -86,14 +86,6 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 		}
 	}
 
-	function stop() {
-		const audio = audioRef.current
-		if (!audio) return
-		audio.pause()
-		audio.currentTime = 0
-		setCurrentTime(0)
-		dispatch({ type: 'STOP' })
-	}
 
 	function skipBack() {
 		const audio = audioRef.current
