@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
-import { CiCircleChevLeft, CiCircleChevRight, CiPause1, CiPlay1, CiStop1, CiVolume, CiVolumeHigh, CiVolumeMute } from 'react-icons/ci'
+import { CiPause1, CiPlay1, CiVolume, CiVolumeHigh, CiVolumeMute } from 'react-icons/ci'
+import { IoPlaySharp, IoPlaySkipBackSharp, IoPlaySkipForwardSharp, IoPauseSharp } from "react-icons/io5";
+
 import { usePlayer } from '../context/PlayerContext'
 
 interface Props {
@@ -86,14 +88,6 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 		}
 	}
 
-	function stop() {
-		const audio = audioRef.current
-		if (!audio) return
-		audio.pause()
-		audio.currentTime = 0
-		setCurrentTime(0)
-		dispatch({ type: 'STOP' })
-	}
 
 	function skipBack() {
 		const audio = audioRef.current
@@ -197,21 +191,21 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 						disabled={!isActive}
 						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
 						title="Skip back"
-					><CiCircleChevLeft /></button>
+					><IoPlaySkipBackSharp /></button>
 					<button
 						onClick={togglePlayPause}
 						disabled={!isActive || status === 'loading'}
-						className="w-14 h-14 sm:w-10 sm:h-10 rounded-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 flex items-center justify-center text-white cursor-pointer text-3xl sm:text-xl"
+						className="w-14 h-14 sm:w-10 sm:h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-3xl sm:text-xl"
 						title={status === 'playing' ? 'Pause' : 'Play'}
 					>
-						{status === 'playing' ? <CiPause1 /> : <CiPlay1 />}
+						{status === 'playing' ? <IoPauseSharp /> : <IoPlaySharp />}
 					</button>
 					<button
 						onClick={skipForward}
 						disabled={!isActive}
 						className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
 						title="Skip forward"
-					><CiCircleChevRight /></button>
+					><IoPlaySkipForwardSharp /></button>
 				</div>
 
 				{/* Volume */}
