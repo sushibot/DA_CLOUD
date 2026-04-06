@@ -3,11 +3,16 @@ import { useTracks } from '../hooks/useTracks'
 import { useAlbum } from '../hooks/useAlbum'
 import { TrackRow } from './TrackRow'
 import { AlbumHeader } from './AlbumHeader'
+import { LoadingSplash } from './LoadingSplash'
 
 export function TrackList() {
-	useTracks()
+	const loading = useTracks()
 	const { state } = usePlayer()
 	const album = useAlbum()
+
+	if (loading) {
+		return <LoadingSplash />
+	}
 
 	if (state.tracks.length === 0) {
 		return (
