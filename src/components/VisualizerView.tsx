@@ -147,7 +147,8 @@ export function VisualizerView({
             onMouseUp={handleSeekCommit as any}
             onTouchEnd={handleSeekCommit as any}
             disabled={!currentTrack}
-            className="w-full accent-violet-500 disabled:opacity-40 cursor-pointer [&::-webkit-slider-runnable-track]:h-[5px] [&::-webkit-slider-runnable-track]:rounded-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:mt-[-4px] [&::-moz-range-track]:h-[5px] [&::-moz-range-track]:rounded-none [&::-moz-range-thumb]:w-[13px] [&::-moz-range-thumb]:h-[13px]"
+            style={{ '--pct': `${((currentTime / (duration || 1)) * 100).toFixed(1)}%` } as React.CSSProperties}
+            className="w-full outline-none appearance-none disabled:opacity-40 cursor-pointer [&::-webkit-slider-runnable-track]:h-[5px] [&::-webkit-slider-runnable-track]:rounded-none [&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,#8b5cf6_var(--pct),#4b5563_var(--pct))] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-violet-500 [&::-moz-range-track]:h-[5px] [&::-moz-range-track]:rounded-none [&::-moz-range-track]:bg-gray-600 [&::-moz-range-progress]:bg-violet-500 [&::-moz-range-thumb]:w-[13px] [&::-moz-range-thumb]:h-[13px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-violet-500 [&::-moz-range-thumb]:border-none"
           />
           <div className="flex justify-between text-xs text-gray-400">
             <span>{fmt(currentTime)}</span>
