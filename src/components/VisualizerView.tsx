@@ -34,6 +34,10 @@ export function VisualizerView({
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Seed with current values in case events already fired
+    setCurrentTime(audio.currentTime);
+    setDuration(audio.duration || 0);
+
     const onTimeUpdate = () => {
       if (!seekingRef.current) setCurrentTime(audio.currentTime);
     };
@@ -45,7 +49,7 @@ export function VisualizerView({
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("durationchange", onDurationChange);
     };
-  }, [audioRef]);
+  }, [audioRef, currentTrack]);
 
   function togglePlayPause() {
     const audio = audioRef.current;
