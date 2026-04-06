@@ -32,10 +32,14 @@ export default function App() {
     if (!audio || !state.currentTrack) return
 
     async function load() {
+      // Unlock iOS audio before any async work — iOS blocks play() after an await
+      audio!.play().catch(() => {})
+
       const res = await fetch(`/api/tracks/url?key=${encodeURIComponent(state.currentTrack!.key)}`)
       const { url } = await res.json()
       audio!.src = url
       audio!.volume = state.volume
+      audio!.load()
 
       if (!sourceRef.current) {
         const ctx = new AudioContext()
@@ -77,7 +81,7 @@ export default function App() {
         <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
           expanded ? 'translate-y-0' : 'translate-y-full'
         }`}>
-          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} />
+          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} audioRef={audioRef} />
         </div>
       </div>
 
