@@ -195,7 +195,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <button
           onClick={skipBack}
           disabled={!isActive}
-          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
+          className="text-gray-300 outline-none hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
           title="Skip back"
         >
           <IoPlaySkipBackSharp />
@@ -211,7 +211,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <button
           onClick={skipForward}
           disabled={!isActive}
-          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
+          className="text-gray-300 outline-none hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
           title="Skip forward"
         >
           <IoPlaySkipForwardSharp />
@@ -234,7 +234,11 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
           onMouseUp={handleSeekCommit as any}
           onTouchEnd={handleSeekCommit as any}
           disabled={!isActive}
-          style={{ '--pct': `${((currentTime / (duration || 1)) * 100).toFixed(1)}%` } as React.CSSProperties}
+          style={
+            {
+              "--pct": `${((currentTime / (duration || 1)) * 100).toFixed(1)}%`,
+            } as React.CSSProperties
+          }
           className="flex-1 outline-none appearance-none disabled:opacity-40 cursor-pointer min-w-0 [&::-webkit-slider-runnable-track]:h-[5px] [&::-webkit-slider-runnable-track]:rounded-none [&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,#8b5cf6_var(--pct),#4b5563_var(--pct))] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-violet-500 [&::-moz-range-track]:h-[5px] [&::-moz-range-track]:rounded-none [&::-moz-range-track]:bg-gray-600 [&::-moz-range-progress]:bg-violet-500 [&::-moz-range-thumb]:w-[13px] [&::-moz-range-thumb]:h-[13px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-violet-500 [&::-moz-range-thumb]:border-none"
         />
         <span className="w-10 shrink-0">{fmt(duration)}</span>
@@ -264,7 +268,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         >
           <button
             onClick={() => setVolumeOpen((v) => !v)}
-            className="cursor-pointer hover:text-white text-xl"
+            className="cursor-pointer hover:text-white text-xl outline-none"
             title="Volume"
           >
             {muted ? (
@@ -286,7 +290,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
                 step={0.01}
                 value={volume}
                 onChange={handleVolumeChange}
-                className="accent-violet-500 cursor-pointer"
+                className="accent-violet-500 cursor-pointer outline-none"
                 style={{
                   writingMode: "vertical-lr",
                   direction: "rtl",
@@ -295,7 +299,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
               />
               <button
                 onClick={toggleMute}
-                className="cursor-pointer hover:text-white"
+                className="cursor-pointer hover:text-white outline-none"
                 title={muted ? "Unmute" : "Mute"}
               >
                 {muted ? <CiVolumeMute size={18} /> : <CiVolume size={18} />}
