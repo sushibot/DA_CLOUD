@@ -34,7 +34,9 @@ router.get('/', async (_req, res) => {
 router.get('/url', async (req, res) => {
   try {
     const key = req.query.key as string
-    if (!key) { res.status(400).json({ error: 'key is required' }); return }
+    if (!key || key.includes('..') || !/\.(mp3|flac|wav|ogg|aac|m4a)$/i.test(key)) {
+      res.status(400).json({ error: 'Invalid key' }); return
+    }
     const url = await getPresignedUrl(key)
     res.json({ url })
   } catch (err) {
