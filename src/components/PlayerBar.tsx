@@ -162,8 +162,8 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 
   return (
     <div
-      className={`bg-gray-950 px-4 py-3 flex items-center gap-4 w-full ${
-        expanded ? "" : "border-t border-white/10"
+      className={`bg-gray-950 px-4 py-3 items-center gap-4 w-full ${
+        expanded ? "hidden sm:flex" : "flex border-t border-white/10"
       }`}
     >
       {/* Mobile: track name left, play/pause right — hidden when visualizer is expanded */}

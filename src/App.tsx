@@ -32,10 +32,14 @@ export default function App() {
     if (!audio || !state.currentTrack) return
 
     async function load() {
+      // Unlock iOS audio before any async work — iOS blocks play() after an await
+      audio!.play().catch(() => {})
+
       const res = await fetch(`/api/tracks/url?key=${encodeURIComponent(state.currentTrack!.key)}`)
       const { url } = await res.json()
       audio!.src = url
       audio!.volume = state.volume
+      audio!.load()
 
       if (!sourceRef.current) {
         const ctx = new AudioContext()
