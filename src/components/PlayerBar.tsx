@@ -185,7 +185,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
       </button>
 
       {/* Desktop: controls left */}
-      <div className="hidden sm:flex items-center gap-4 shrink-0 pl-2">
+      <div className="hidden sm:flex items-center gap-4 shrink-0 w-1/4 pl-2">
         <button
           onClick={skipBack}
           disabled={!isActive}
@@ -212,7 +212,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         </button>
       </div>
 
-      {/* Desktop: seek bar + volume */}
+      {/* Desktop: seek bar (centered) */}
       <div className="hidden sm:flex flex-1 items-center gap-2 text-xs text-gray-400 min-w-0">
         <span className="w-10 text-right shrink-0">{fmt(currentTime)}</span>
         <input
@@ -229,6 +229,23 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
           className="flex-1 accent-violet-500 disabled:opacity-40 cursor-pointer min-w-0"
         />
         <span className="w-10 shrink-0">{fmt(duration)}</span>
+      </div>
+
+      {/* Desktop: track name + volume right */}
+      <div className="hidden sm:flex items-center justify-end gap-3 shrink-0 w-1/4">
+        <div
+          onClick={isActive ? onExpandToggle : undefined}
+          className={`truncate text-sm text-right ${
+            isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
+          }`}
+        >
+          {currentTrack?.title ?? "No track loaded"}
+          {isActive && (
+            <span className="ml-2 text-gray-500 text-xs">
+              {expanded ? "▾" : "▴"}
+            </span>
+          )}
+        </div>
 
         <div ref={volumeRef} className="relative flex items-center shrink-0 text-gray-400">
           <button
@@ -262,21 +279,6 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Desktop: track name right */}
-      <div
-        onClick={isActive ? onExpandToggle : undefined}
-        className={`hidden sm:block shrink-0 w-1/4 text-right truncate sm:text-sm text-xl ${
-          isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
-        }`}
-      >
-        {currentTrack?.title ?? "No track loaded"}
-        {isActive && (
-          <span className="ml-2 text-gray-500 text-xs">
-            {expanded ? "▾" : "▴"}
-          </span>
-        )}
       </div>
     </div>
   );
