@@ -1,6 +1,7 @@
 import { usePlayer } from '../context/PlayerContext'
 import { useTracks } from '../hooks/useTracks'
 import { TrackRow } from './TrackRow'
+import { AlbumHeader } from './AlbumHeader'
 
 export function TrackList() {
 	useTracks()
@@ -15,14 +16,17 @@ export function TrackList() {
 	}
 
 	return (
-		<ul className="flex-1 overflow-y-auto h-full p-4 space-y-1">
-			{state.tracks.map((track) => (
-				<TrackRow
-					key={track.key}
-					track={track}
-					isActive={state.currentTrack?.key === track.key}
-				/>
-			))}
-		</ul>
+		<div className="flex-1 overflow-y-auto h-full">
+			<AlbumHeader title="Demo" songCount={state.tracks.length} totalDurationMs={7606000} />
+			<ul className="p-4 space-y-1">
+				{state.tracks.map((track) => (
+					<TrackRow
+						key={track.key}
+						track={track}
+						isActive={state.currentTrack?.key === track.key}
+					/>
+				))}
+			</ul>
+		</div>
 	)
 }
