@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import helmet from 'helmet'
+import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import tracksRouter from './routes/tracks.js'
 import albumsRouter from './routes/albums.js'
@@ -24,7 +25,14 @@ const urlLimiter = rateLimit({
   legacyHeaders: false,
 })
 
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  /^https:\/\/.*\.ngrok-free\.app$/,
+  /^https:\/\/.*\.ngrok\.io$/,
+]
+
 app.use(helmet())
+app.use(cors({ origin: ALLOWED_ORIGINS }))
 app.use(express.json())
 app.use('/api/tracks/url', urlLimiter)
 app.use('/api/tracks', generalLimiter)
