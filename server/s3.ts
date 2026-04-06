@@ -25,14 +25,15 @@ export async function getPresignedUrl(key: string, expiresIn = 3600): Promise<st
 	return getSignedUrl(s3, command, { expiresIn })
 }
 
-export async function getTrackMetadata(key: string): Promise<{ duration?: number; bpm?: number }> {
+export async function getTrackMetadata(key: string): Promise<{ durationMs?: number; bpm?: number }> {
 	try {
 		const command = new GetObjectCommand({ Bucket: BUCKET, Key: key })
 		const response = await s3.send(command)
 		const bytes = await response.Body!.transformToByteArray()
-		const { common } = await parseBuffer(Buffer.from(bytes), { mimeType: response.ContentType })
+		const { common, format } = await parseBuffer(Buffer.from(bytes), { mimeType: response.ContentType })
 		return {
 			bpm: common.bpm ? Math.round(common.bpm) : undefined,
+			durationMs: format.duration ? Math.round(format.duration * 1000) : undefined,
 		}
 	} catch {
 		return {}

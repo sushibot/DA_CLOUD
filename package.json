@@ -11,6 +11,7 @@
     "server": "tsx server/index.ts",
     "migrate": "drizzle-kit migrate",
     "seed": "tsx server/db/seed.ts",
+    "backfill:duration": "tsx server/db/backfill-duration.ts",
     "tunnel": "ngrok http 5173"
   },
   "dependencies": {

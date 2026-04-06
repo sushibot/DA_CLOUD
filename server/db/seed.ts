@@ -44,7 +44,7 @@ async function seed() {
       albumId: album.id,
       releaseYear: new Date().getFullYear(),
       bpm: meta.bpm ?? null,
-      isPublished: true,
+      durationMs: meta.durationMs ?? null,
     }).onConflictDoNothing()
 
     console.log(`  ✓ ${title}${meta.bpm ? ` (${meta.bpm} BPM)` : ''}`)
