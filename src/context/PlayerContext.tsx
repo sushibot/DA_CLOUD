@@ -18,9 +18,20 @@ export type PlayerAction =
   | { type: 'STOP' }
   | { type: 'SET_VOLUME'; payload: number }
 
+const LAST_TRACK_KEY = 'lastTrack'
+
+function loadLastTrack(): Track | null {
+  try {
+    const raw = localStorage.getItem(LAST_TRACK_KEY)
+    return raw ? (JSON.parse(raw) as Track) : null
+  } catch {
+    return null
+  }
+}
+
 const initialState: PlayerState = {
   tracks: [],
-  currentTrack: null,
+  currentTrack: loadLastTrack(),
   status: 'idle',
   volume: 1,
 }
@@ -30,6 +41,7 @@ function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
     case 'SET_TRACKS':
       return { ...state, tracks: action.payload }
     case 'LOAD_TRACK':
+      localStorage.setItem(LAST_TRACK_KEY, JSON.stringify(action.payload))
       return { ...state, currentTrack: action.payload, status: 'loading' }
     case 'PLAY':
       return { ...state, status: 'playing' }
