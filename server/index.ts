@@ -1,12 +1,34 @@
 import 'dotenv/config'
 import express from 'express'
+import helmet from 'helmet'
+import rateLimit from 'express-rate-limit'
 import tracksRouter from './routes/tracks.js'
 import albumsRouter from './routes/albums.js'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
 
+// General limit: 100 requests per 15 minutes per IP
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Stricter limit on presigned URL generation: 30 per 15 minutes per IP
+const urlLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+app.use(helmet())
 app.use(express.json())
+app.use('/api/tracks/url', urlLimiter)
+app.use('/api/tracks', generalLimiter)
+app.use('/api/albums', generalLimiter)
 app.use('/api/tracks', tracksRouter)
 app.use('/api/albums', albumsRouter)
 
