@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
+    "migrate": "drizzle-kit migrate",
     "seed": "tsx server/db/seed.ts",
     "tunnel": "ngrok http 5173"
   },
