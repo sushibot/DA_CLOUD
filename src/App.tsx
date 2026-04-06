@@ -77,7 +77,7 @@ export default function App() {
         <div className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
           expanded ? 'translate-y-0' : 'translate-y-full'
         }`}>
-          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} />
+          <VisualizerView onClose={() => setExpanded(false)} expanded={expanded} analyserLeftRef={analyserLeftRef} analyserRightRef={analyserRightRef} audioRef={audioRef} />
         </div>
       </div>
 

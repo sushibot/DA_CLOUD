@@ -166,10 +166,10 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         expanded ? "" : "border-t border-white/10"
       }`}
     >
-      {/* Mobile: track name left, play/pause right */}
+      {/* Mobile: track name left, play/pause right — hidden when visualizer is expanded */}
       <div
         onClick={isActive ? onExpandToggle : undefined}
-        className={`sm:hidden flex-1 truncate text-base min-w-0 ${
+        className={`${expanded ? 'hidden' : 'sm:hidden'} flex-1 truncate text-base min-w-0 ${
           isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
         }`}
       >
@@ -178,7 +178,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
       <button
         onClick={togglePlayPause}
         disabled={!isActive || status === "loading"}
-        className="sm:hidden w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0"
+        className={`${expanded ? 'hidden' : 'sm:hidden'} w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0`}
         title={status === "playing" ? "Pause" : "Play"}
       >
         {status === "playing" ? <IoPauseSharp /> : <IoPlaySharp />}
