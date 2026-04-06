@@ -166,12 +166,30 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         expanded ? "" : "border-t border-white/10"
       }`}
     >
-      {/* Left: controls */}
-      <div className="flex items-center gap-3 shrink-0">
+      {/* Mobile: track name left, play/pause right */}
+      <div
+        onClick={isActive ? onExpandToggle : undefined}
+        className={`sm:hidden flex-1 truncate text-base min-w-0 ${
+          isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
+        }`}
+      >
+        {currentTrack?.title ?? "No track loaded"}
+      </div>
+      <button
+        onClick={togglePlayPause}
+        disabled={!isActive || status === "loading"}
+        className="sm:hidden w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0"
+        title={status === "playing" ? "Pause" : "Play"}
+      >
+        {status === "playing" ? <IoPauseSharp /> : <IoPlaySharp />}
+      </button>
+
+      {/* Desktop: controls left */}
+      <div className="hidden sm:flex items-center gap-4 shrink-0 pl-2">
         <button
           onClick={skipBack}
           disabled={!isActive}
-          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
+          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
           title="Skip back"
         >
           <IoPlaySkipBackSharp />
@@ -179,7 +197,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <button
           onClick={togglePlayPause}
           disabled={!isActive || status === "loading"}
-          className="w-14 h-14 sm:w-10 sm:h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-3xl sm:text-xl"
+          className="w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 hover:text-gray-400 cursor-pointer text-xl"
           title={status === "playing" ? "Pause" : "Play"}
         >
           {status === "playing" ? <IoPauseSharp /> : <IoPlaySharp />}
@@ -187,15 +205,15 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <button
           onClick={skipForward}
           disabled={!isActive}
-          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-4xl sm:text-3xl"
+          className="text-gray-300 hover:text-white disabled:opacity-40 cursor-pointer text-3xl"
           title="Skip forward"
         >
           <IoPlaySkipForwardSharp />
         </button>
       </div>
 
-      {/* Middle: seek bar + volume */}
-      <div className="flex-1 flex items-center gap-2 text-xs text-gray-400 min-w-0">
+      {/* Desktop: seek bar + volume */}
+      <div className="hidden sm:flex flex-1 items-center gap-2 text-xs text-gray-400 min-w-0">
         <span className="w-10 text-right shrink-0">{fmt(currentTime)}</span>
         <input
           type="range"
@@ -212,11 +230,10 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         />
         <span className="w-10 shrink-0">{fmt(duration)}</span>
 
-        {/* Volume */}
-        <div ref={volumeRef} className="relative hidden sm:flex items-center shrink-0 text-gray-400">
+        <div ref={volumeRef} className="relative flex items-center shrink-0 text-gray-400">
           <button
             onClick={() => setVolumeOpen((v) => !v)}
-            className="cursor-pointer hover:text-white text-3xl sm:text-xl"
+            className="cursor-pointer hover:text-white text-xl"
             title="Volume"
           >
             {muted ? <CiVolumeMute /> : volume === 0 ? <CiVolume /> : <CiVolumeHigh />}
@@ -247,10 +264,10 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         </div>
       </div>
 
-      {/* Right: track name */}
+      {/* Desktop: track name right */}
       <div
         onClick={isActive ? onExpandToggle : undefined}
-        className={`shrink-0 w-1/4 text-right truncate sm:text-sm text-xl ${
+        className={`hidden sm:block shrink-0 w-1/4 text-right truncate sm:text-sm text-xl ${
           isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
         }`}
       >
