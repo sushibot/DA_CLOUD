@@ -18,7 +18,7 @@ function formatDuration(totalMs: number): string {
 
 export function AlbumHeader({ title, songCount, totalDurationMs }: Props) {
   return (
-    <div className="px-6 pt-8 pb-6">
+    <div className="px-8 pt-8 pb-6">
       <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">Album</p>
       <h1 className="text-7xl sm:text-8xl font-black text-white leading-none tracking-tight mb-4">
         {title}
