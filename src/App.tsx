@@ -12,6 +12,9 @@ export default function App() {
   const analyserRightRef = useRef<AnalyserNode | null>(null)
   const { state, dispatch } = usePlayer()
   const [expanded, setExpanded] = useState(false)
+  const [playerBarVisible, setPlayerBarVisible] = useState(
+    () => localStorage.getItem('playerBarShown') === 'true'
+  )
 
   useEffect(() => {
     const audio = new Audio()
@@ -26,6 +29,13 @@ export default function App() {
     if (state.status === 'playing') audio.play().catch(console.error)
     else if (state.status === 'paused') audio.pause()
   }, [state.status])
+
+  useEffect(() => {
+    if (state.currentTrack && !playerBarVisible) {
+      setPlayerBarVisible(true)
+      localStorage.setItem('playerBarShown', 'true')
+    }
+  }, [state.currentTrack]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const audio = audioRef.current
@@ -85,7 +95,7 @@ export default function App() {
         </div>
       </div>
 
-      <PlayerBar audioRef={audioRef} expanded={expanded} onExpandToggle={() => setExpanded(v => !v)} />
+      {playerBarVisible && <PlayerBar audioRef={audioRef} expanded={expanded} onExpandToggle={() => setExpanded(v => !v)} />}
     </div>
   )
 }
