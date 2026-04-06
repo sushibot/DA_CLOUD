@@ -169,8 +169,12 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
       {/* Mobile: track name left, play/pause right — hidden when visualizer is expanded */}
       <div
         onClick={isActive ? onExpandToggle : undefined}
-        className={`${expanded ? 'hidden' : 'sm:hidden'} flex-1 truncate text-base min-w-0 ${
-          isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
+        className={`${
+          expanded ? "hidden" : "sm:hidden"
+        } flex-1 truncate text-base min-w-0 ${
+          isActive
+            ? "cursor-pointer text-gray-300 hover:text-white"
+            : "text-gray-500"
         }`}
       >
         {currentTrack?.title ?? "No track loaded"}
@@ -178,7 +182,9 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
       <button
         onClick={togglePlayPause}
         disabled={!isActive || status === "loading"}
-        className={`${expanded ? 'hidden' : 'sm:hidden'} w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0`}
+        className={`${
+          expanded ? "hidden" : "sm:hidden"
+        } w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0`}
         title={status === "playing" ? "Pause" : "Play"}
       >
         {status === "playing" ? <IoPauseSharp /> : <IoPlaySharp />}
@@ -222,11 +228,13 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
           step={0.1}
           value={currentTime}
           onChange={handleSeekChange}
-          onMouseDown={() => { seekingRef.current = true }}
+          onMouseDown={() => {
+            seekingRef.current = true;
+          }}
           onMouseUp={handleSeekCommit as any}
           onTouchEnd={handleSeekCommit as any}
           disabled={!isActive}
-          className="flex-1 accent-violet-500 disabled:opacity-40 cursor-pointer min-w-0"
+          className="flex-1 outline-none accent-violet-500 disabled:opacity-40 cursor-pointer min-w-0 [&::-webkit-slider-runnable-track]:h-[5px] [&::-webkit-slider-runnable-track]:rounded-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:mt-[-4px] [&::-moz-range-track]:h-[5px] [&::-moz-range-track]:rounded-none [&::-moz-range-thumb]:w-[13px] [&::-moz-range-thumb]:h-[13px]"
         />
         <span className="w-10 shrink-0">{fmt(duration)}</span>
       </div>
@@ -236,7 +244,9 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <div
           onClick={isActive ? onExpandToggle : undefined}
           className={`truncate text-sm text-right ${
-            isActive ? "cursor-pointer text-gray-300 hover:text-white" : "text-gray-500"
+            isActive
+              ? "cursor-pointer text-gray-300 hover:text-white"
+              : "text-gray-500"
           }`}
         >
           {currentTrack?.title ?? "No track loaded"}
@@ -247,13 +257,22 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
           )}
         </div>
 
-        <div ref={volumeRef} className="relative flex items-center shrink-0 text-gray-400">
+        <div
+          ref={volumeRef}
+          className="relative flex items-center shrink-0 text-gray-400"
+        >
           <button
             onClick={() => setVolumeOpen((v) => !v)}
             className="cursor-pointer hover:text-white text-xl"
             title="Volume"
           >
-            {muted ? <CiVolumeMute /> : volume === 0 ? <CiVolume /> : <CiVolumeHigh />}
+            {muted ? (
+              <CiVolumeMute />
+            ) : volume === 0 ? (
+              <CiVolume />
+            ) : (
+              <CiVolumeHigh />
+            )}
           </button>
 
           {volumeOpen && (
@@ -267,7 +286,11 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
                 value={volume}
                 onChange={handleVolumeChange}
                 className="accent-violet-500 cursor-pointer"
-                style={{ writingMode: "vertical-lr", direction: "rtl", height: "96px" }}
+                style={{
+                  writingMode: "vertical-lr",
+                  direction: "rtl",
+                  height: "96px",
+                }}
               />
               <button
                 onClick={toggleMute}

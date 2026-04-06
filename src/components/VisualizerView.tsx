@@ -147,7 +147,7 @@ export function VisualizerView({
             onMouseUp={handleSeekCommit as any}
             onTouchEnd={handleSeekCommit as any}
             disabled={!currentTrack}
-            className="w-full accent-violet-500 disabled:opacity-40 cursor-pointer"
+            className="w-full accent-violet-500 disabled:opacity-40 cursor-pointer [&::-webkit-slider-runnable-track]:h-[5px] [&::-webkit-slider-runnable-track]:rounded-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:mt-[-4px] [&::-moz-range-track]:h-[5px] [&::-moz-range-track]:rounded-none [&::-moz-range-thumb]:w-[13px] [&::-moz-range-thumb]:h-[13px]"
           />
           <div className="flex justify-between text-xs text-gray-400">
             <span>{fmt(currentTime)}</span>
