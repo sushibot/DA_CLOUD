@@ -25,11 +25,17 @@ const urlLimiter = rateLimit({
   legacyHeaders: false,
 })
 
-const ALLOWED_ORIGINS = [
+const DEV_ORIGINS = [
   'http://localhost:5173',
   /^https:\/\/.*\.ngrok-free\.app$/,
   /^https:\/\/.*\.ngrok\.io$/,
 ]
+
+const PROD_ORIGINS = [
+  // 'https://your-netlify-domain.netlify.app',
+]
+
+const ALLOWED_ORIGINS = process.env.NODE_ENV === 'production' ? PROD_ORIGINS : DEV_ORIGINS
 
 app.use(helmet())
 app.use(cors({ origin: ALLOWED_ORIGINS }))
