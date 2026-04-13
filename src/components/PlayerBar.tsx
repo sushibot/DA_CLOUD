@@ -1,11 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import {
-  CiPause1,
-  CiPlay1,
-  CiVolume,
-  CiVolumeHigh,
-  CiVolumeMute,
-} from "react-icons/ci";
+import { CiVolume, CiVolumeHigh, CiVolumeMute } from "react-icons/ci";
 import {
   IoPlaySharp,
   IoPlaySkipBackSharp,
