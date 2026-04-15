@@ -17,7 +17,7 @@ export function TrackList() {
   if (state.tracks.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500 h-min">
-        No tracks found.
+        No tracks found!
       </div>
     );
   }
