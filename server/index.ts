@@ -31,12 +31,12 @@ const DEV_ORIGINS = [
   /^https:\/\/.*\.ngrok\.io$/,
 ];
 
-// const PROD_ORIGINS = [
-//   // 'https://your-netlify-domain.netlify.app',
-// ];
+const PROD_ORIGINS = process.env.ALLOWED_ORIGIN
+  ? [process.env.ALLOWED_ORIGIN]
+  : [];
 
-// const ALLOWED_ORIGINS = process.env.NODE_ENV === 'production' ? PROD_ORIGINS : DEV_ORIGINS
-const ALLOWED_ORIGINS = DEV_ORIGINS;
+const ALLOWED_ORIGINS =
+  process.env.NODE_ENV === "production" ? PROD_ORIGINS : DEV_ORIGINS;
 
 app.use(helmet());
 app.use(cors({ origin: ALLOWED_ORIGINS }));
