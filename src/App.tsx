@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { API_BASE } from './lib/api'
 import { usePlayer } from './context/PlayerContext'
 import { TrackList } from './components/TrackList'
 import { PlayerBar } from './components/PlayerBar'
@@ -45,7 +46,7 @@ export default function App() {
       // Unlock iOS audio before any async work — iOS blocks play() after an await
       audio!.play().catch(() => {})
 
-      const res = await fetch(`/api/tracks/url?key=${encodeURIComponent(state.currentTrack!.key)}`)
+      const res = await fetch(`${API_BASE}/api/tracks/url?key=${encodeURIComponent(state.currentTrack!.key)}`)
       const { url } = await res.json()
       audio!.src = url
       audio!.volume = state.volume

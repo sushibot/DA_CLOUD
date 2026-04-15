@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '../lib/api'
 
 interface Album {
   id: string
@@ -18,7 +19,7 @@ export function useAlbum(id: string = DEMO_ALBUM_ID) {
   const [album, setAlbum] = useState<Album | null>(null)
 
   useEffect(() => {
-    fetch(`/api/albums/${id}`)
+    fetch(`${API_BASE}/api/albums/${id}`)
       .then(r => r.json())
       .then(setAlbum)
       .catch(console.error)
