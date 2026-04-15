@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
+    "start": "node dist/index.js",
     "migrate": "drizzle-kit migrate",
     "seed": "tsx server/db/seed.ts",
     "backfill:duration": "tsx server/db/backfill-duration.ts",

@@ -2,4 +2,4 @@
   buildCommand = "pnpm build:server"
 
 [deploy]
-  startCommand = "pnpm server"
+  startCommand = "pnpm start"
