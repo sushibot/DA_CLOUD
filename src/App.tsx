@@ -38,6 +38,68 @@ export default function App() {
     }
   }, [state.currentTrack]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Media Session — lock screen controls
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return
+    const { currentTrack, tracks } = state
+
+    navigator.mediaSession.metadata = currentTrack
+      ? new MediaMetadata({ title: currentTrack.title })
+      : null
+
+    function play() {
+      audioRef.current?.play()
+      dispatch({ type: 'PLAY' })
+    }
+    function pause() {
+      audioRef.current?.pause()
+      dispatch({ type: 'PAUSE' })
+    }
+    function skipForward() {
+      const idx = tracks.findIndex(t => t.key === currentTrack?.key)
+      if (idx >= 0) dispatch({ type: 'LOAD_TRACK', payload: idx < tracks.length - 1 ? tracks[idx + 1] : tracks[0] })
+    }
+    function skipBack() {
+      const audio = audioRef.current
+      const idx = tracks.findIndex(t => t.key === currentTrack?.key)
+      if (audio && audio.currentTime > 3) { audio.currentTime = 0; return }
+      if (idx > 0) dispatch({ type: 'LOAD_TRACK', payload: tracks[idx - 1] })
+      else if (idx === 0) dispatch({ type: 'LOAD_TRACK', payload: tracks[tracks.length - 1] })
+    }
+    function seekTo(details: MediaSessionActionDetails) {
+      if (details.seekTime !== undefined && audioRef.current) {
+        audioRef.current.currentTime = details.seekTime
+      }
+    }
+
+    navigator.mediaSession.setActionHandler('play', play)
+    navigator.mediaSession.setActionHandler('pause', pause)
+    navigator.mediaSession.setActionHandler('nexttrack', skipForward)
+    navigator.mediaSession.setActionHandler('previoustrack', skipBack)
+    navigator.mediaSession.setActionHandler('seekto', seekTo)
+  }, [state.currentTrack, state.tracks]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keep lock screen playback state + seek position in sync
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return
+    navigator.mediaSession.playbackState = state.status === 'playing' ? 'playing' : state.status === 'paused' ? 'paused' : 'none'
+  }, [state.status])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    function updatePosition() {
+      if (!audio || !isFinite(audio.duration)) return
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        position: audio.currentTime,
+        playbackRate: audio.playbackRate,
+      })
+    }
+    audio.addEventListener('timeupdate', updatePosition)
+    return () => audio.removeEventListener('timeupdate', updatePosition)
+  }, [state.currentTrack])
+
   useEffect(() => {
     const audio = audioRef.current
     if (!audio || !state.currentTrack) return
