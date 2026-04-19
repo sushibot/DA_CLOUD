@@ -1,3 +1,4 @@
+<!-- last reviewed: 2026-04-19 -->
 # CLAUDE.md — SushiCloud Project Context
 
 ## Overview
