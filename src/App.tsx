@@ -87,7 +87,7 @@ export default function App() {
   return (
     <div className="h-dvh flex flex-col bg-gray-950 text-white">
       <header className="shrink-0 px-6 py-4 border-b border-white/10">
-        <h1 className="text-xl font-semibold tracking-tight">SushiBot Cloud</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Sushi Cloud</h1>
       </header>
 
       <div className="flex-1 min-h-0 relative overflow-hidden">
