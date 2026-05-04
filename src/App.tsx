@@ -78,6 +78,9 @@ export default function App() {
         splitter.connect(analyserL, 0);
         splitter.connect(analyserR, 1);
         source.connect(ctx.destination);
+        ctx.addEventListener('statechange', () => {
+          if (ctx.state === 'suspended') ctx.resume().catch(console.error)
+        })
         audioContextRef.current = ctx;
         sourceRef.current = source;
         analyserLeftRef.current = analyserL;
