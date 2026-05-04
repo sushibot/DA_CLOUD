@@ -49,6 +49,18 @@ export default function App() {
     }
   }, [state.currentTrack]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Resume AudioContext when user unlocks / returns to page
+  useEffect(() => {
+    function onVisible() {
+      const ctx = audioContextRef.current
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(console.error)
+      }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [])
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !state.currentTrack) return;
@@ -79,7 +91,7 @@ export default function App() {
         splitter.connect(analyserR, 1);
         source.connect(ctx.destination);
         ctx.addEventListener('statechange', () => {
-          if (ctx.state === 'suspended') ctx.resume().catch(console.error)
+          console.log('[AudioContext] state:', ctx.state)
         })
         audioContextRef.current = ctx;
         sourceRef.current = source;
