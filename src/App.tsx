@@ -16,16 +16,21 @@ export default function App() {
   const [playerBarVisible, setPlayerBarVisible] = useState(
     () => localStorage.getItem("playerBarShown") === "true",
   );
-
+  /**
+   * Sets up new Audio Context
+   */
   useEffect(() => {
     const audio = new Audio();
     audio.crossOrigin = "anonymous";
     audioRef.current = audio;
     return () => {
-      audio.pause();
+      // audio.pause();
     };
   }, []);
 
+  /**
+   * Tracks the current audio reference and sets state accordingly.
+   */
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -33,6 +38,10 @@ export default function App() {
     else if (state.status === "paused") audio.pause();
   }, [state.status]);
 
+  /**
+   * Show player bar if a track is playing and player bar is not visible.
+   * Save player bar state to local storage
+   */
   useEffect(() => {
     if (state.currentTrack && !playerBarVisible) {
       setPlayerBarVisible(true);
