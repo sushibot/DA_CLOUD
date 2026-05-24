@@ -52,14 +52,14 @@ export default function App() {
   // Resume AudioContext when user unlocks / returns to page
   useEffect(() => {
     function onVisible() {
-      const ctx = audioContextRef.current
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(console.error)
+      const ctx = audioContextRef.current;
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume().catch(console.error);
       }
     }
-    document.addEventListener('visibilitychange', onVisible)
-    return () => document.removeEventListener('visibilitychange', onVisible)
-  }, [])
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -90,9 +90,11 @@ export default function App() {
         splitter.connect(analyserL, 0);
         splitter.connect(analyserR, 1);
         source.connect(ctx.destination);
-        ctx.addEventListener('statechange', () => {
-          console.log('[AudioContext] state:', ctx.state)
-        })
+
+        ctx.addEventListener("statechange", () => {
+          console.log("[AudioContext] state:", ctx.state);
+        });
+
         audioContextRef.current = ctx;
         sourceRef.current = source;
         analyserLeftRef.current = analyserL;

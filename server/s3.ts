@@ -12,8 +12,9 @@ export const s3 = new S3Client({
 
 export const BUCKET = process.env.S3_BUCKET_NAME!
 
-export async function listAudioKeys(): Promise<string[]> {
-	const command = new ListObjectsV2Command({ Bucket: BUCKET })
+export async function listAudioKeys(prefix?: string): Promise<string[]> {
+	const command = new ListObjectsV2Command({ Bucket: BUCKET, Prefix: prefix })
+	console.log(command)
 	const response = await s3.send(command)
 	return (response.Contents ?? [])
 		.map((obj) => obj.Key!)
