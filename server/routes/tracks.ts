@@ -2,28 +2,43 @@ import { Router } from 'express'
 import { getPresignedUrl } from '../s3.js'
 import { db } from '../db/index.js'
 import { tracks } from '../db/schema.js'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
 const router = Router()
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
-let trackCache: { data: unknown; expiresAt: number } | null = null
+const trackCache = new Map<string, { data: unknown; expiresAt: number }>()
 
-router.get('/', async (_req, res) => {
+router.get('/', async (req, res) => {
   try {
-    if (trackCache && Date.now() < trackCache.expiresAt) {
-      console.log('[tracks] cache hit')
-      res.json(trackCache.data)
+    const albumId = req.query.albumId as string | undefined
+
+    if (albumId !== undefined && !UUID_RE.test(albumId)) {
+      res.status(400).json({ error: 'Invalid albumId' }); return
+    }
+
+    const cacheKey = albumId ?? 'all'
+    const cached = trackCache.get(cacheKey)
+    if (cached && Date.now() < cached.expiresAt) {
+      console.log(`[tracks] cache hit (${cacheKey})`)
+      res.json(cached.data)
       return
     }
-    console.log('[tracks] cache miss — querying DB')
-    const rows = await db.select().from(tracks).where(eq(tracks.isPublished, true))
+
+    console.log(`[tracks] cache miss — querying DB (${cacheKey})`)
+    const where = albumId
+      ? and(eq(tracks.isPublished, true), eq(tracks.albumId, albumId))
+      : eq(tracks.isPublished, true)
+
+    const rows = await db.select().from(tracks).where(where)
     const result = rows.map(row => ({
       key: row.s3Key,
       title: row.title,
       bpm: row.bpm ?? undefined,
+      albumId: row.albumId,
     }))
-    trackCache = { data: result, expiresAt: Date.now() + CACHE_TTL_MS }
+    trackCache.set(cacheKey, { data: result, expiresAt: Date.now() + CACHE_TTL_MS })
     res.json(result)
   } catch (err) {
     console.error('Error listing tracks:', err)
