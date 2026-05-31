@@ -5,9 +5,10 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import tracksRouter from "./routes/tracks.js";
 import albumsRouter from "./routes/albums.js";
+import healthRouter from "./routes/health.js";
 
 const app = express();
-const PORT = process.env.PORT ?? 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
 // General limit: 100 requests per 15 minutes per IP
 const generalLimiter = rateLimit({
@@ -31,12 +32,12 @@ const DEV_ORIGINS = [
   /^https:\/\/.*\.ngrok\.io$/,
 ];
 
-// const PROD_ORIGINS = [
-//   // 'https://your-netlify-domain.netlify.app',
-// ];
+const PROD_ORIGINS = process.env.ALLOWED_ORIGIN
+  ? [process.env.ALLOWED_ORIGIN]
+  : [];
 
-// const ALLOWED_ORIGINS = process.env.NODE_ENV === 'production' ? PROD_ORIGINS : DEV_ORIGINS
-const ALLOWED_ORIGINS = DEV_ORIGINS;
+const ALLOWED_ORIGINS =
+  process.env.NODE_ENV === "production" ? PROD_ORIGINS : DEV_ORIGINS;
 
 app.use(helmet());
 app.use(cors({ origin: ALLOWED_ORIGINS }));
@@ -46,7 +47,8 @@ app.use("/api/tracks", generalLimiter);
 app.use("/api/albums", generalLimiter);
 app.use("/api/tracks", tracksRouter);
 app.use("/api/albums", albumsRouter);
+app.use("/api/health", healthRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port:${PORT}`);
 });
