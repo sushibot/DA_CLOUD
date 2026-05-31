@@ -49,6 +49,7 @@ async function seed() {
 			s3Key: key,
 			albumId: album.id,
 			releaseYear: releaseYear,
+			isPublished: true,
 			bpm: meta.bpm ?? null,
 			durationMs: meta.durationMs ?? null,
 		}).onConflictDoNothing()
