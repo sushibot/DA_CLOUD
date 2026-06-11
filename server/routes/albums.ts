@@ -1,13 +1,17 @@
 import { Router } from 'express'
 import { db } from '../db/index.js'
 import { albums, tracks } from '../db/schema.js'
-import { eq, sum, count } from 'drizzle-orm'
+import { eq, sum, count, desc } from 'drizzle-orm'
 
 const router = Router()
 
 router.get('/', async (_req, res) => {
 	try {
-		const rows = await db.select().from(albums).where(eq(albums.isArchived, false))
+		const rows = await db.select()
+			.from(albums)
+			.where(eq(albums.isArchived, false))
+			.orderBy(desc(albums.title))
+
 		res.json(rows)
 	} catch (err) {
 		console.error('Error listing albums:', err)
@@ -29,6 +33,7 @@ router.get('/:id', async (req, res) => {
 			})
 			.from(tracks)
 			.where(eq(tracks.albumId, id))
+
 
 		res.json({
 			...album,

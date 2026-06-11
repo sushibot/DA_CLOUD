@@ -13,7 +13,7 @@ export function AlbumRow({ album, onSelect }: Props) {
 			className="flex items-center gap-4 px-4 py-3 rounded-lg cursor-pointer transition-colors hover:bg-white/5 active:bg-white/10"
 		>
 			<img
-				src="/no_album_art_placeholder.jpg"
+				src="/album-placeholder.webp"
 				alt={`${album.title} cover`}
 				className="w-14 h-14 rounded object-cover shrink-0 shadow-md"
 			/>
