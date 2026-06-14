@@ -23,7 +23,7 @@ export function AlbumHeader({ title, songCount, totalDurationMs }: Props) {
         <img
           src={ALBUM_COVER}
           alt={`${title} cover`}
-          className="w-48 h-48 sm:w-50 sm:h-50 rounded object-cover shrink-0 shadow-2xl"
+          className="w-60 h-60 sm:w-50 sm:h-50 rounded object-cover shrink-0 drop-shadow-2xl"
         />
         <div className="min-w-0 w-full text-left">
           <h1 className="text-4xl sm:text-7xl font-black text-white leading-none tracking-tight mb-3 capitalize">
