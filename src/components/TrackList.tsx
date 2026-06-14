@@ -1,13 +1,15 @@
+import { useEffect } from "react";
 import { IoTimeOutline } from "react-icons/io5";
 import { usePlayer } from "../context/PlayerContext";
 import { useTracks } from "../hooks/useTracks";
 import { useAlbum } from "../hooks/useAlbum";
 import { useDominantColor } from "../hooks/useDominantColor";
-
-const ALBUM_COVER = "/SUSHIBOT_CLOSEUP.jpg";
 import { TrackRow } from "./TrackRow";
 import { AlbumHeader } from "./AlbumHeader";
 import { LoadingSplash } from "./LoadingSplash";
+
+const ALBUM_COVER = "/SUSHIBOT_CLOSEUP.jpg";
+const BASE_THEME_COLOR = "#030712";
 
 interface Props {
   albumId: string;
@@ -27,6 +29,15 @@ export function TrackList({ albumId, onBack }: Props) {
         background: `linear-gradient(to bottom, rgb(${accentColor.r},${accentColor.g},${accentColor.b}) 0%, #030712 100%)`,
       }
     : undefined;
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (!meta) return
+    if (accentColor) {
+      meta.setAttribute('content', `rgb(${accentColor.r},${accentColor.g},${accentColor.b})`)
+    }
+    return () => { meta.setAttribute('content', BASE_THEME_COLOR) }
+  }, [accentColor])
 
   if (loading) {
     return <LoadingSplash />;
