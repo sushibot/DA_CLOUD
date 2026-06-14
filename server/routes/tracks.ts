@@ -7,6 +7,14 @@ import { and, eq } from 'drizzle-orm'
 const router = Router()
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+function formatDuration(ms: number | null): string | null {
+  if (ms == null) return null
+  const totalSec = Math.floor(ms / 1000)
+  const mins = Math.floor(totalSec / 60)
+  const secs = totalSec % 60
+  return `${mins}:${String(secs).padStart(2, '0')}`
+}
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 const trackCache = new Map<string, { data: unknown; expiresAt: number }>()
 
@@ -37,6 +45,7 @@ router.get('/', async (req, res) => {
       title: row.title,
       bpm: row.bpm ?? undefined,
       albumId: row.albumId,
+      duration: formatDuration(row.durationMs),
     }))
     trackCache.set(cacheKey, { data: result, expiresAt: Date.now() + CACHE_TTL_MS })
     res.json(result)

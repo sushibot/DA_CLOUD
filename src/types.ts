@@ -3,6 +3,7 @@ export interface Track {
 	title: string
 	bpm?: number
 	albumId: string
+	duration: string | null
 }
 export interface Album {
 	id: string;
