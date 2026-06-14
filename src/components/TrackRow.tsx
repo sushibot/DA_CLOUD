@@ -33,35 +33,23 @@ export function TrackRow({ track, isActive, idx }: Props) {
     return <span className="text-sm tabular-nums">{idx + 1}</span>;
   }
 
+  const metaClass = `text-sm tabular-nums ${isActive ? "text-violet-200" : "text-gray-500"}`;
+
   return (
     <li id={`track-${CSS.escape(track.key)}`} onClick={handleClick}>
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        className={`flex items-center justify-between px-4 py-3 cursor-pointer rounded-sm transition-colors gap-4 ${
-          isActive
-            ? "bg-gray-600 text-white"
-            : "hover:bg-white/10 text-gray-200"
+        className={`grid grid-cols-[2rem_1fr_5rem_4rem] gap-x-8 items-center px-4 py-3 cursor-pointer rounded-sm transition-colors ${
+          isActive ? "bg-gray-600 text-white" : "hover:bg-white/10 text-gray-200"
         }`}
       >
-        <div className="flex items-center gap-3">
-          <span
-            className={`w-4 flex justify-center ${isActive ? "text-white" : "text-gray-400"}`}
-          >
-            {renderTrackIndex()}
-          </span>
-          {/* Left: title */}
-          <span className="truncate">{track.title}</span>
-        </div>
-        <div>
-          {/* Right: duration + bpm */}
-          <span
-            className={`shrink-0 flex items-center gap-3 text-sm tabular-nums ${isActive ? "text-violet-200" : "text-gray-500"}`}
-          >
-            {track.bpm != null && <span>{track.bpm} BPM</span>}
-            <span>{track.duration ?? "—"}</span>
-          </span>
-        </div>
+        <span className={`flex justify-center ${isActive ? "text-white" : "text-gray-400"}`}>
+          {renderTrackIndex()}
+        </span>
+        <span className="truncate capitalize pr-4">{track.title}</span>
+        <span className={`text-right ${metaClass}`}>{track.bpm ?? "—"}</span>
+        <span className={`text-right ${metaClass}`}>{track.duration ?? "—"}</span>
       </div>
     </li>
   );
