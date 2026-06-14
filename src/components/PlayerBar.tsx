@@ -154,15 +154,24 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
 
   return (
     <div
-      className={`shrink-0 bg-gray-950 border-t border-white/10 px-4 ${
-        expanded ? "hidden sm:block" : "block"
-      }`}
+      className={`relative shrink-0 px-4
+        rounded-md bg-slate-800 shadow-2xl shadow-black/50 mx-3 mb-3
+        sm:rounded-none sm:bg-gray-950 sm:border-t sm:border-white/10 sm:shadow-none sm:mx-0 sm:mb-0
+        ${expanded ? "hidden sm:block" : "block"}
+      `}
     >
       {/* ── Mobile ── */}
-      <div className="flex sm:hidden items-center gap-4 py-3">
+      <div className="flex sm:hidden items-center gap-3 py-3">
+        <img
+          src="/SUSHIBOT_CLOSEUP.jpg"
+          alt="Album art"
+          className={`w-10 h-10 rounded object-cover shrink-0 shadow-md transition-opacity ${
+            isActive ? "opacity-100" : "opacity-30"
+          }`}
+        />
         <div
           onClick={isActive ? onExpandToggle : undefined}
-          className={`flex-1 truncate text-base min-w-0 capitalize ${
+          className={`flex-1 truncate text-sm font-medium min-w-0 capitalize ${
             isActive
               ? "cursor-pointer text-gray-300 hover:text-white"
               : "text-gray-500"
@@ -173,7 +182,7 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
         <button
           onClick={togglePlayPause}
           disabled={!isActive || status === "loading"}
-          className="w-10 h-10 rounded-full outline-none bg-violet-50 disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-xl shrink-0"
+          className="w-10 h-10 rounded-full outline-none bg-white disabled:opacity-40 flex items-center justify-center text-gray-950 cursor-pointer text-sm shrink-0"
           title={status === "playing" ? "Pause" : "Play"}
         >
           {status === "playing" ? <IoPauseSharp /> : <IoPlaySharp />}
@@ -196,9 +205,11 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
               isActive ? "opacity-100" : "opacity-30"
             }`}
           />
-          <span className={`truncate text-sm font-medium capitalize ${
-            isActive ? "text-gray-300 hover:text-white" : "text-gray-500"
-          }`}>
+          <span
+            className={`truncate text-sm font-medium capitalize ${
+              isActive ? "text-gray-300 hover:text-white" : "text-gray-500"
+            }`}
+          >
             {currentTrack?.title ?? "No track loaded"}
           </span>
           {isActive && (
@@ -289,6 +300,14 @@ export function PlayerBar({ audioRef, expanded, onExpandToggle }: Props) {
             className={`w-32 ${sliderClass}`}
           />
         </div>
+      </div>
+
+      {/* Visual progress bar — mobile only, not interactive */}
+      <div className="sm:hidden absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 rounded-b-md overflow-hidden">
+        <div
+          className="h-full bg-white/50 rounded-br-none"
+          style={{ width: seekPct }}
+        />
       </div>
     </div>
   );
