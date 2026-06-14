@@ -18,20 +18,19 @@ function formatDuration(totalMs: number): string {
 
 export function AlbumHeader({ title, songCount, totalDurationMs }: Props) {
   return (
-    <div className="px-8 pt-8 pb-6">
-      <div className="flex flex-row items-center gap-3">
+    <div className="px-6 pt-8 pb-6 sm:px-8">
+      <div className="flex flex-col items-center sm:flex-row sm:items-end gap-6">
         <img
           src={ALBUM_COVER}
           alt={`${title} cover`}
-          className="w-50 h-50 rounded object-cover shrink-0 shadow-md"
+          className="w-48 h-48 sm:w-50 sm:h-50 rounded object-cover shrink-0 shadow-2xl"
         />
-        <div>
-          <p className="text-xs  tracking-widest text-gray-200 mb-2">Album</p>
-          <h1 className="text-7xl sm:text-8xl font-black text-white leading-none tracking-tight mb-4 capitalize">
+        <div className="min-w-0 w-full text-left">
+          <h1 className="text-4xl sm:text-7xl font-black text-white leading-none tracking-tight mb-3 capitalize">
             {title}
           </h1>
           <p className="text-sm text-gray-300">
-            {songCount} {songCount === 1 ? "song" : "songs"} •{" "}
+            Album • {songCount} {songCount === 1 ? "song" : "songs"} •{" "}
             {formatDuration(totalDurationMs)}
           </p>
         </div>

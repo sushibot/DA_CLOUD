@@ -69,10 +69,10 @@ export function TrackList({ albumId, onBack }: Props) {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-[2rem_1fr_5rem_4rem] gap-x-8 items-center px-4 py-2 mx-4 mb-1 border-b border-white/10 text-xs uppercase tracking-widest text-gray-400">
-            <span className="text-center">#</span>
+          <div className="grid grid-cols-[1fr_4rem] sm:grid-cols-[2rem_1fr_5rem_4rem] sm:gap-x-8 items-center px-4 py-2 mx-4 mb-1 border-b border-white/10 text-xs uppercase tracking-widest text-gray-400">
+            <span className="hidden sm:block text-center">#</span>
             <span>Title</span>
-            <span className="text-right">BPM</span>
+            <span className="hidden sm:block text-right">BPM</span>
             <span className="flex justify-end">
               <IoTimeOutline className="w-4 h-4" />
             </span>

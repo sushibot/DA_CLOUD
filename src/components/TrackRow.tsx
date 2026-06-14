@@ -40,15 +40,15 @@ export function TrackRow({ track, isActive, idx }: Props) {
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        className={`grid grid-cols-[2rem_1fr_5rem_4rem] gap-x-8 items-center px-4 py-3 cursor-pointer rounded-sm transition-colors ${
+        className={`grid grid-cols-[1fr_4rem] sm:grid-cols-[2rem_1fr_5rem_4rem] sm:gap-x-8 items-center px-4 py-3 cursor-pointer rounded-sm transition-colors ${
           isActive ? "bg-gray-600 text-white" : "hover:bg-white/10 text-gray-200"
         }`}
       >
-        <span className={`flex justify-center ${isActive ? "text-white" : "text-gray-400"}`}>
+        <span className={`hidden sm:flex justify-center ${isActive ? "text-white" : "text-gray-400"}`}>
           {renderTrackIndex()}
         </span>
         <span className="truncate capitalize pr-4">{track.title}</span>
-        <span className={`text-right ${metaClass}`}>{track.bpm ?? "—"}</span>
+        <span className={`hidden sm:block text-right ${metaClass}`}>{track.bpm ?? "—"}</span>
         <span className={`text-right ${metaClass}`}>{track.duration ?? "—"}</span>
       </div>
     </li>
