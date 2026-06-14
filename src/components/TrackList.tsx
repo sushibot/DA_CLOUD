@@ -1,6 +1,9 @@
 import { usePlayer } from "../context/PlayerContext";
 import { useTracks } from "../hooks/useTracks";
 import { useAlbum } from "../hooks/useAlbum";
+import { useDominantColor } from "../hooks/useDominantColor";
+
+const ALBUM_COVER = "/SUSHIBOT_CLOSEUP.jpg";
 import { TrackRow } from "./TrackRow";
 import { AlbumHeader } from "./AlbumHeader";
 import { LoadingSplash } from "./LoadingSplash";
@@ -14,32 +17,39 @@ export function TrackList({ albumId, onBack }: Props) {
 	const loading = useTracks(albumId);
 	const { state } = usePlayer();
 	const album = useAlbum(albumId);
+	const accentColor = useDominantColor(ALBUM_COVER);
 
 	const tracks = state.tracks
+
+	const headerStyle = accentColor
+		? { background: `linear-gradient(to bottom, rgb(${accentColor.r},${accentColor.g},${accentColor.b}) 0%, #030712 100%)` }
+		: undefined
 
 	if (loading) {
 		return <LoadingSplash />;
 	}
 
 	return (
-		<div className="flex-1 overflow-y-auto h-full">
-			<div className="px-4 pt-4">
-				<button
-					onClick={onBack}
-					className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-white transition-colors mb-2"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-						<path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-					</svg>
-					Albums
-				</button>
-			</div>
+		<div className="flex-1 overflow-y-auto h-full bg-gray-950">
+			<div style={headerStyle} className="transition-colors duration-700">
+				<div className="px-4 pt-4">
+					<button
+						onClick={onBack}
+						className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-white transition-colors mb-2"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+							<path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+						</svg>
+						Albums
+					</button>
+				</div>
 
-			<AlbumHeader
-				title={album?.title ?? ""}
-				songCount={album?.trackCount ?? tracks.length}
-				totalDurationMs={album?.totalDurationMs ?? 0}
-			/>
+				<AlbumHeader
+					title={album?.title ?? ""}
+					songCount={album?.trackCount ?? tracks.length}
+					totalDurationMs={album?.totalDurationMs ?? 0}
+				/>
+			</div>
 
 			{tracks.length === 0 ? (
 				<div className="flex items-center justify-center text-gray-500 py-16">

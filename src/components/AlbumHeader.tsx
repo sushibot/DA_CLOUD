@@ -26,13 +26,11 @@ export function AlbumHeader({ title, songCount, totalDurationMs }: Props) {
           className="w-50 h-50 rounded object-cover shrink-0 shadow-md"
         />
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-            Album
-          </p>
+          <p className="text-xs  tracking-widest text-gray-200 mb-2">Album</p>
           <h1 className="text-7xl sm:text-8xl font-black text-white leading-none tracking-tight mb-4 capitalize">
             {title}
           </h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-300">
             {songCount} {songCount === 1 ? "song" : "songs"} •{" "}
             {formatDuration(totalDurationMs)}
           </p>

@@ -2,8 +2,23 @@ import { Router } from 'express'
 import { db } from '../db/index.js'
 import { albums, tracks } from '../db/schema.js'
 import { eq, sum, count, desc } from 'drizzle-orm'
+import { getPresignedUrl } from '../s3.js'
 
 const router = Router()
+
+router.get('/cover-url', async (req, res) => {
+	const key = req.query.key as string | undefined
+	if (!key || key.includes('..') || !/\.(jpe?g|png|webp|gif|avif)$/i.test(key)) {
+		res.status(400).json({ error: 'Invalid key' }); return
+	}
+	try {
+		const url = await getPresignedUrl(key)
+		res.json({ url })
+	} catch (err) {
+		console.error('Error generating cover art URL:', err)
+		res.status(500).json({ error: 'Failed to generate URL' })
+	}
+})
 
 router.get('/', async (_req, res) => {
 	try {
