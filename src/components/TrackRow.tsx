@@ -40,7 +40,7 @@ export function TrackRow({ track, isActive, idx }: Props) {
         onMouseLeave={() => setIsHover(false)}
         className={`flex items-center justify-between px-4 py-3 cursor-pointer rounded-sm transition-colors gap-4 ${
           isActive
-            ? "bg-gray-500 text-white"
+            ? "bg-gray-600 text-white"
             : "hover:bg-white/10 text-gray-200"
         }`}
       >
@@ -59,7 +59,7 @@ export function TrackRow({ track, isActive, idx }: Props) {
             className={`shrink-0 flex items-center gap-3 text-sm tabular-nums ${isActive ? "text-violet-200" : "text-gray-500"}`}
           >
             {track.bpm != null && <span>{track.bpm} BPM</span>}
-            <span>{track.duration ?? '—'}</span>
+            <span>{track.duration ?? "—"}</span>
           </span>
         </div>
       </div>

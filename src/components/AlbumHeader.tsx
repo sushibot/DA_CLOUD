@@ -3,7 +3,7 @@ interface Props {
   songCount: number;
   totalDurationMs: number;
 }
-
+const ALBUM_COVER = "/SUSHIBOT_CLOSEUP.jpg";
 function formatDuration(totalMs: number): string {
   const totalSec = Math.floor(totalMs / 1000);
   const hours = Math.floor(totalSec / 3600);
@@ -19,16 +19,25 @@ function formatDuration(totalMs: number): string {
 export function AlbumHeader({ title, songCount, totalDurationMs }: Props) {
   return (
     <div className="px-8 pt-8 pb-6">
-      <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-        Album
-      </p>
-      <h1 className="text-7xl sm:text-8xl font-black text-white leading-none tracking-tight mb-4 capitalize">
-        {title}
-      </h1>
-      <p className="text-sm text-gray-400">
-        {songCount} {songCount === 1 ? "song" : "songs"} •{" "}
-        {formatDuration(totalDurationMs)}
-      </p>
+      <div className="flex flex-row items-center gap-3">
+        <img
+          src={ALBUM_COVER}
+          alt={`${title} cover`}
+          className="w-50 h-50 rounded object-cover shrink-0 shadow-md"
+        />
+        <div>
+          <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
+            Album
+          </p>
+          <h1 className="text-7xl sm:text-8xl font-black text-white leading-none tracking-tight mb-4 capitalize">
+            {title}
+          </h1>
+          <p className="text-sm text-gray-400">
+            {songCount} {songCount === 1 ? "song" : "songs"} •{" "}
+            {formatDuration(totalDurationMs)}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
